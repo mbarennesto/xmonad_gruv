@@ -1,0 +1,41 @@
+Config { overrideRedirect = False
+         , font     = "xft:Iosevka:size=10:antialias=true"
+         , bgColor  = "#282828"
+         , fgColor  = "#ebdbb2"
+         , commands = [  Run Alsa "default" "Master"
+                          [ "--template", "Vol [<volume>%] (<status>)"
+                          , "--"
+                          , "--on", ""
+                          , "--off", "Muted" 
+			  , "-H", "100"
+			  , "-h", "<fc=#458588>Max</fc>"
+			  , "-m", "<fc=#d79921>Med</fc>"
+			  , "-l", "Low"
+			  , "--offc", "#cc241d"
+			  , "--onc", "#98971a"
+			  ]
+                      , Run Date "<fc=#98971a>%b</fc> %d %Y, <fc=#458588>%R</fc>" "date" 10
+		      , Run BatteryP ["BAT0"]
+                          ["--template", "Bat [<left>] (<acstatus>)"
+                          , "--L", "15"
+                          , "--H", "95"
+                          , "--low"      , "#cc241d"
+                          , "--normal"   , "#d65d0e"
+                          , "--high"     , "#458588"
+                          , "--" -- battery specific options
+                          -- discharging status
+                          , "-o", "Discharging <timeleft>"
+                          -- AC "on" status
+                          , "-O", "<fc=#98971a>Charging</fc>"
+                          -- charged status
+                          , "-i", "<fc=#458588>Full</fc>"
+			  , "-P"
+			  , "-A", "5"
+			  , "-a", "notify-send -u critical 'Battery running out!!'"
+			  ] 60
+		      , Run StdinReader
+                      ]
+         , sepChar  = "%"
+         , alignSep = "}{"
+         , template = "%StdinReader% }{ %date% | %alsa:default:Master% | %battery% "
+         }
